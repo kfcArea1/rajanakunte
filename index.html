@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Encoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        #encoder-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #generated-link {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            word-break: break-all;
+            font-family: monospace;
+            position: relative;
+        }
+        #copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+        }
+        #copy-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div id="encoder-container">
+    <h2>Rajanakunte</h2>
+
+    <label for="order-id">Order ID</label>
+    <input type="text" id="order-id" placeholder="Enter Order ID">
+
+    <label for="date">Date</label>
+    <input type="date" id="date">
+
+    <label for="time">Time</label>
+    <input type="time" id="time">
+
+    <label for="order-type">Order Type</label>
+    <input type="text" id="order-type" placeholder="Enter Order Type (e.g., 1 for dine-in)">
+
+    <label for="survey-model">Survey Model</label>
+    <input type="text" id="survey-model" placeholder="Enter Survey Model (e.g., 4.0)">
+
+    <label for="phone-number">Phone Number</label>
+    <input type="text" id="phone-number" placeholder="Enter Phone Number">
+
+    <button onclick="generateLink()">Generate Link</button>
+
+    <div id="generated-link"></div>
+    <button id="copy-button" onclick="copyLink()">Copy to Clipboard</button>
+</div>
+
+<script>
+    function generateLink() {
+        const storeID = "91KDIPL751-01";
+        const orderID = document.getElementById('order-id').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value + ".000";
+        const orderType = document.getElementById('order-type').value;
+        const surveyModel = document.getElementById('survey-model').value;
+        const phoneNumber = document.getElementById('phone-number').value;
+
+        if (orderID && date && time && orderType && surveyModel && phoneNumber) {
+            const data = {
+                "S": storeID,
+                "OI": orderID,
+                "D": date,
+                "TM": time,
+                "TI": orderID,
+                "OT": orderType,
+                "SM": surveyModel,
+                "PH": phoneNumber
+            };
+
+            const encodedData = btoa(JSON.stringify(data));
+            const link = `https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData}`;
+
+            document.getElementById('generated-link').textContent = link;
+            document.getElementById('copy-button').style.display = 'block';
+        } else {
+            alert("Please fill out all fields.");
+        }
+    }
+
+    function copyLink() {
+        const link = document.getElementById('generated-link').textContent;
+        navigator.clipboard.writeText(link).then(() => {
+            alert("Link copied to clipboard!");
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+</script>
+<script>
+    setTimeout(function() {
+        location.reload(); // Reloads the webpage
+    }, 60000); // 60000 milliseconds = 1 minute
+</script>
+</body>
+</html>
