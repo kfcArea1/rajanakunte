@@ -1,205 +1,192 @@
-<!DOCTYPE html>
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription & Link Encoder</title>
+    <title>Link Encoder</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f9fc;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
         }
-
-        #encoder-container, .container {
-            width: 100%;
-            max-width: 800px;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: box-shadow 0.3s ease;
-        }
-
-        #encoder-container:hover, .container:hover {
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        h2, .container h1 {
-            color: #333;
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        input[type="text"], input[type="date"], input[type="time"] {
-            width: calc(100% - 22px);
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
+        #encoder-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
             border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-            outline: none;
+        h2 {
+            text-align: center;
         }
-
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"], input[type="time"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
         button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background-color: #007bff;
             border: none;
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 18px;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         button:hover {
             background-color: #0056b3;
-            transform: scale(1.02);
         }
-
-        #generated-link {
+        .link-container {
             margin-top: 20px;
-            padding: 15px;
+            padding: 10px;
             background-color: #e9ecef;
-            border-radius: 8px;
-            word-break: break-word;
+            border-radius: 4px;
+            word-break: break-all;
             font-family: monospace;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ddd;
+            position: relative;
         }
-
-        #copy-button {
+        .send-button {
             margin-top: 10px;
-            padding: 12px;
+            padding: 5px 10px;
             background-color: #28a745;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             color: white;
-            font-size: 18px;
+            font-size: 14px;
             cursor: pointer;
-            display: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            right: 10px;
+            top: 10px;
         }
-
-        #copy-button:hover {
+        .send-button:hover {
             background-color: #218838;
-            transform: scale(1.02);
+        }
+        .sent {
+            background-color: red !important;
+        }
+        .strikethrough {
+            text-decoration: line-through;
         }
     </style>
 </head>
 <body>
 
-    <!-- Link Encoder Section -->
-    <div id="encoder-container">
-        <h2>Link Encoder - Rajanakunte</h2>
+<div id="encoder-container">
+    <h2>Link Encoder</h2>
 
-        <label for="order-id">Order ID</label>
-        <input type="text" id="order-id" placeholder="Enter Order ID">
+    <label for="order-id">Order ID</label>
+    <input type="text" id="order-id" placeholder="Enter Order ID">
 
-        <label for="date">Date</label>
-        <input type="date" id="date">
+    <label for="date">Date</label>
+    <input type="date" id="date">
 
-        <label for="time">Time</label>
-        <input type="time" id="time">
+    <label for="time">Time</label>
+    <input type="time" id="time">
 
-        <label for="order-type">Order Type</label>
-        <input type="text" id="order-type" placeholder="Enter Order Type (e.g., 1 for dine-in)">
+    <label for="survey-mode">Survey Mode</label>
+    <select id="survey-mode">
+        <option value="4.0">4.0</option>
+        <option value="3.0">3.0</option>
+    </select>
 
-        <label for="survey-model">Survey Model</label>
-        <input type="text" id="survey-model" placeholder="Enter Survey Model (e.g., 4.0)">
+    <label for="order-type">Order Type</label>
+    <select id="order-type">
+        <option value="1">1 (Dine-in)</option>
+        <option value="2">2 (Takeaway)</option>
+        <option value="3">3 (Delivery)</option>
+    </select>
 
-        <label for="phone-number">Phone Number</label>
-        <input type="text" id="phone-number" placeholder="Enter Phone Number">
+    <label for="total-links">Total Links Needed</label>
+    <input type="number" id="total-links" placeholder="Enter total number of links">
 
-        <button onclick="generateLink()">Generate Link</button>
+    <label for="phone-number">Phone Number</label>
+    <input type="text" id="phone-number" placeholder="Enter phone number">
 
-        <div id="generated-link"></div>
-        <button id="copy-button" onclick="copyLink()">Copy to Clipboard</button>
-    </div>
+    <button onclick="generateLinks()">Generate Links</button>
 
-   
-    <script>
-        function generateLink() {
-            const storeID = "91KDIPL751-01";
-            const orderID = document.getElementById('order-id').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value + ".000";
-            const orderType = document.getElementById('order-type').value;
-            const surveyModel = document.getElementById('survey-model').value;
-            const phoneNumber = document.getElementById('phone-number').value;
+    <div id="generated-links"></div>
+</div>
 
-            if (orderID && date && time && orderType && surveyModel && phoneNumber) {
-                const data = {
-                    "S": storeID,
-                    "OI": orderID,
-                    "D": date,
-                    "TM": time,
-                    "TI": orderID,
-                    "OT": orderType,
-                    "SM": surveyModel,
-                    "PH": phoneNumber
-                };
+<script>
+    function generateLinks() {
+        const storeID = "91KDIPL751-01";  // Updated store ID
+        let orderID = parseInt(document.getElementById('order-id').value);
+        const date = document.getElementById('date').value;
+        const initialTime = document.getElementById('time').value;
+        const surveyModel = document.getElementById('survey-mode').value;
+        const orderType = document.getElementById('order-type').value;
+        const totalLinks = parseInt(document.getElementById('total-links').value);
+        const userPhoneNumber = document.getElementById('phone-number').value;
 
-                const encodedData = btoa(JSON.stringify(data));
-                const link = `https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData}`;
-
-                document.getElementById('generated-link').textContent = link;
-                document.getElementById('copy-button').style.display = 'block';
-            } else {
-                alert("Please fill out all fields.");
-            }
+        if (isNaN(orderID) || !date || !initialTime || !totalLinks || !surveyModel || !orderType || !userPhoneNumber) {
+            alert("Please fill out all fields correctly.");
+            return;
         }
 
-        function copyLink() {
-            const link = document.getElementById('generated-link').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                alert("Link copied to clipboard!");
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-            });
+        let linksHtml = "";
+        let time = new Date(`${date}T${initialTime}`);
+
+        for (let i = 0; i < totalLinks; i++) {
+            const phoneNumber = generatePhoneNumber();
+
+            const data = {
+                "S": storeID,
+                "OI": orderID.toString(),
+                "D": date,
+                "TM": time.toISOString().slice(11, 19) + ".000",
+                "TI": orderID.toString(),
+                "OT": orderType,
+                "SM": surveyModel,
+                "PH": phoneNumber
+            };
+
+            const encodedData = btoa(JSON.stringify(data));
+            const link = `https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData}`;
+
+            linksHtml += `
+                <div class="link-container">
+                    <span id="link-${i}">${link}</span>
+                    <button id="send-${i}" class="send-button" onclick="sendLink('${link}', '${userPhoneNumber}', 'send-${i}')">Send</button>
+                </div>
+            `;
+
+            // Increment time by 3 minutes
+            time.setMinutes(time.getMinutes() + 3);
+            // Increment order ID by 2
+            orderID += 2;
         }
 
-        setTimeout(function() {
-            location.reload();
-        }, 60000);
-       
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.getElementById('generated-links').innerHTML = linksHtml;
+    }
 
-    
-        document.addEventListener('keydown', (event) => {
-            if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
-                event.preventDefault();
-            }
-        });
-    </script>
+    function sendLink(link, phoneNumber, buttonId) {
+        const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(link)}`;
+        window.open(whatsappLink, '_blank');
+
+        // Change the button color to red after sending
+        document.getElementById(buttonId).classList.add('sent');
+    }
+
+    function generatePhoneNumber() {
+        const prefixes = ["9", "8", "7"];
+        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  
+      let number = prefix;
+        for (let i = 0; i < 9; i++) {
+            number += Math.floor(Math.random() * 10);
+        }
+        return number;
+    }
+</script>
 
 </body>
 </html>
