@@ -3,190 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Encoder</title>
+    <title>Rajanakunter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            margin: 0;
             padding: 20px;
+            background-color: #f7f9fc;
         }
-        #encoder-container {
-            max-width: 600px;
+
+        .container {
+            max-width: 900px;
             margin: 0 auto;
-            background: #fff;
+            background: #ffffff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        h2 {
+
+        h1 {
             text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
         }
-        label {
-            font-weight: bold;
+
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
         }
-        input[type="text"], input[type="date"], input[type="time"], input[type="number"], select {
+
+        table {
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .link-container {
+            border-collapse: collapse;
             margin-top: 20px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            word-break: break-all;
-            font-family: monospace;
-            position: relative;
         }
-        .send-button {
-            margin-top: 10px;
-            padding: 5px 10px;
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .generated-link {
+            font-family: monospace;
+            word-break: break-word;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
             background-color: #28a745;
             border: none;
-            border-radius: 4px;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
-            position: absolute;
-            right: 10px;
-            top: 10px;
         }
-        .send-button:hover {
+
+        button:hover {
             background-color: #218838;
-        }
-        .sent {
-            background-color: red !important;
-        }
-        .strikethrough {
-            text-decoration: line-through;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Rajanakunte</h1>
+        <input type="file" id="fileInput" accept=".xlsx, .xls">
+        <table id="linkTable">
+            <thead>
+                <tr>
+                    <th>Receipt No.</th>
+                    <th>Sales Type</th>
+                    <th>Survey Model</th>
+                    <th>Generated Link</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button onclick="copyLinks()">Copy All Links</button>
+    </div>
 
-<div id="encoder-container">
-    <h2>Link Encoder</h2>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        const storeID = "91KDIPL751-01";
 
-    <label for="order-id">Order ID</label>
-    <input type="text" id="order-id" placeholder="Enter Order ID">
-
-    <label for="date">Date</label>
-    <input type="date" id="date">
-
-    <label for="time">Time</label>
-    <input type="time" id="time">
-
-    <label for="survey-mode">Survey Mode</label>
-    <select id="survey-mode">
-        <option value="4.0">4.0</option>
-        <option value="3.0">3.0</option>
-    </select>
-
-    <label for="order-type">Order Type</label>
-    <select id="order-type">
-        <option value="1">1 (Dine-in)</option>
-        <option value="2">2 (Takeaway)</option>
-        <option value="3">3 (Delivery)</option>
-    </select>
-
-    <label for="total-links">Total Links Needed</label>
-    <input type="number" id="total-links" placeholder="Enter total number of links">
-
-    <label for="phone-number">Phone Number</label>
-    <input type="text" id="phone-number" placeholder="Enter phone number">
-
-    <button onclick="generateLinks()">Generate Links</button>
-
-    <div id="generated-links"></div>
-</div>
-
-<script>
-    function generateLinks() {
-        const storeID = "91KDIPL751-01";  // Updated store ID
-        let orderID = parseInt(document.getElementById('order-id').value);
-        const date = document.getElementById('date').value;
-        const initialTime = document.getElementById('time').value;
-        const surveyModel = document.getElementById('survey-mode').value;
-        const orderType = document.getElementById('order-type').value;
-        const totalLinks = parseInt(document.getElementById('total-links').value);
-        const userPhoneNumber = document.getElementById('phone-number').value;
-
-        if (isNaN(orderID) || !date || !initialTime || !totalLinks || !surveyModel || !orderType || !userPhoneNumber) {
-            alert("Please fill out all fields correctly.");
-            return;
+        function convertExcelDate(serial) {
+            const date = new Date((serial - 25569) * 86400 * 1000);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return ${year}-${month}-${day};
         }
 
-        let linksHtml = "";
-        let time = new Date(`${date}T${initialTime}`);
+        function convertExcelTime(serial) {
+            const totalMilliseconds = Math.round(serial * 24 * 60 * 60 * 1000);
+            const hours = String(Math.floor(totalMilliseconds / (60 * 60 * 1000))).padStart(2, '0');
+            const minutes = String(Math.floor((totalMilliseconds % (60 * 60 * 1000)) / (60 * 1000))).padStart(2, '0');
+            const seconds = String(Math.floor((totalMilliseconds % (60 * 1000)) / 1000)).padStart(2, '0');
+            const milliseconds = String(totalMilliseconds % 1000).padStart(3, '0');
+            return ${hours}:${minutes}:${seconds}.${milliseconds};
+        }
 
-        for (let i = 0; i < totalLinks; i++) {
-            const phoneNumber = generatePhoneNumber();
+        function generateSurveyLink(row) {
+            const receiptNo = row['Receipt No.'];
+            const salesType = row['Sales Type'];
 
+            let surveyModel = '';
+            let orderID = '';
+            let numericOT = '';
+
+            // Rule 1: Completely numeric Receipt No. with TAKEAWAY
+            if (/^\d+$/.test(receiptNo) && salesType === 'TAKEAWAY') {
+                surveyModel = '6.0';
+                orderID = receiptNo;
+                numericOT = '2';
+            }
+            // Rule 2: Completely numeric Receipt No. with DINE-IN
+            else if (/^\d+$/.test(receiptNo) && salesType === 'DINE-IN') {
+                surveyModel = '6.0';
+                orderID = receiptNo;
+                numericOT = '1';
+            }
+            // Rule 3: Receipt No. starts with K482A4 and TAKEAWAY
+            else if (receiptNo.startsWith('K482A4') && salesType === 'TAKEAWAY') {
+                surveyModel = '4.0';
+                orderID = receiptNo.slice(-4);
+                numericOT = '2';
+            }
+            // Rule 4: Receipt No. starts with K482A4 and DINE-IN
+            else if (receiptNo.startsWith('K482A4') && salesType === 'DINE-IN') {
+                surveyModel = '4.0';
+                orderID = receiptNo.slice(-4);
+                numericOT = '1';
+            }
+            // Rule 5: Receipt No. starts with K482A4 and DELIVERY
+            else if (receiptNo.startsWith('K482A4') && salesType === 'DELIVERY') {
+                surveyModel = '3.0';
+                orderID = receiptNo;
+                numericOT = '3';
+            }
+            // If no rules match, return null
+            else {
+                return null;
+            }
+
+            // Date and Time Processing
+            const date = convertExcelDate(row['Date']);
+            const time = convertExcelTime(row['Time']);
+            const phoneNumber = 91${row['Sell-to Contact No.']};
+            const isoDateTime = ${date}T${time}Z;
+
+            // Data Payload for Survey Link
             const data = {
                 "S": storeID,
-                "OI": orderID.toString(),
+                "OI": orderID,
                 "D": date,
-                "TM": time.toISOString().slice(11, 19) + ".000",
-                "TI": orderID.toString(),
-                "OT": orderType,
+                "TM": time,
+                "DTM": isoDateTime,
+                "TI": orderID,
+                "OT": numericOT,
                 "SM": surveyModel,
                 "PH": phoneNumber
             };
 
+            // Generate Encoded Link
             const encodedData = btoa(JSON.stringify(data));
-            const link = `https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData}`;
-
-            linksHtml += `
-                <div class="link-container">
-                    <span id="link-${i}">${link}</span>
-                    <button id="send-${i}" class="send-button" onclick="sendLink('${link}', '${userPhoneNumber}', 'send-${i}')">Send</button>
-                </div>
-            `;
-
-            // Increment time by 3 minutes
-            time.setMinutes(time.getMinutes() + 3);
-            // Increment order ID by 2
-            orderID += 2;
+            return https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData};
         }
 
-        document.getElementById('generated-links').innerHTML = linksHtml;
-    }
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-    function sendLink(link, phoneNumber, buttonId) {
-        const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(link)}`;
-        window.open(whatsappLink, '_blank');
+            const reader = new FileReader();
 
-        // Change the button color to red after sending
-        document.getElementById(buttonId).classList.add('sent');
-    }
+            reader.onload = function(event) {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-    function generatePhoneNumber() {
-        const prefixes = ["9", "8", "7"];
-        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  
-      let number = prefix;
-        for (let i = 0; i < 9; i++) {
-            number += Math.floor(Math.random() * 10);
+                const tableBody = document.querySelector('#linkTable tbody');
+                tableBody.innerHTML = ''; // Clear previous data
+
+                sheetData
+                    .filter(row => {
+                        const posReceipt = row['POS Receipt No.'] || '';
+                        return !(
+                            posReceipt.includes('K482SWG') || 
+                            posReceipt.includes('K482ZMT') || 
+                            posReceipt.includes('K482MAGIC')
+                        );
+                    })
+                    .forEach(row => {
+                        const link = generateSurveyLink(row);
+                        
+                        if (link) {
+                            const newRow = document.createElement('tr');
+                            newRow.innerHTML = `
+                                <td>${row['Receipt No.']}</td>
+                                <td>${row['Sales Type']}</td>
+                                <td>${link.includes('SM=6.0') ? '6.0' : 
+                                       link.includes('SM=4.0') ? '4.0' : 
+                                       link.includes('SM=3.0') ? '3.0' : 'Unknown'}</td>
+                                <td class="generated-link">${link}</td>
+                            `;
+                            tableBody.appendChild(newRow);
+                        }
+                    });
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+
+        function copyLinks() {
+            const links = Array.from(document.querySelectorAll('.generated-link')).map(cell => cell.textContent).join('\n');
+            navigator.clipboard.writeText(links).then(() => {
+                alert('Links copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy links: ', err);
+            });
         }
-        return number;
-    }
-</script>
-
+    </script>
 </body>
 </html>
