@@ -1,9 +1,10 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+
+<meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajanakunter</title>
+    <title>Survey Link Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -102,7 +103,7 @@
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            return ${year}-${month}-${day};
+            return `${year}-${month}-${day}`;
         }
 
         function convertExcelTime(serial) {
@@ -111,7 +112,7 @@
             const minutes = String(Math.floor((totalMilliseconds % (60 * 60 * 1000)) / (60 * 1000))).padStart(2, '0');
             const seconds = String(Math.floor((totalMilliseconds % (60 * 1000)) / 1000)).padStart(2, '0');
             const milliseconds = String(totalMilliseconds % 1000).padStart(3, '0');
-            return ${hours}:${minutes}:${seconds}.${milliseconds};
+            return `${hours}:${minutes}:${seconds}.${milliseconds}`;
         }
 
         function generateSurveyLink(row) {
@@ -160,8 +161,8 @@
             // Date and Time Processing
             const date = convertExcelDate(row['Date']);
             const time = convertExcelTime(row['Time']);
-            const phoneNumber = 91${row['Sell-to Contact No.']};
-            const isoDateTime = ${date}T${time}Z;
+            const phoneNumber = `91${row['Sell-to Contact No.']}`;
+            const isoDateTime = `${date}T${time}Z`;
 
             // Data Payload for Survey Link
             const data = {
@@ -178,7 +179,7 @@
 
             // Generate Encoded Link
             const encodedData = btoa(JSON.stringify(data));
-            return https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData};
+            return `https://customer.kfc-listens.com/jfe/form/SV_8bHC0noyvM3jPWC?Q_EED=${encodedData}`;
         }
 
         document.getElementById('fileInput').addEventListener('change', function(event) {
