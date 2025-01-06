@@ -135,20 +135,20 @@
                 orderID = receiptNo;
                 numericOT = '1';
             }
-            // Rule 3: Receipt No. starts with K482A4 and TAKEAWAY
-            else if (receiptNo.startsWith('K482A4') && salesType === 'TAKEAWAY') {
+            // Rule 3: Receipt No. starts with K482 and TAKEAWAY
+            else if (receiptNo.startsWith('K482') && salesType === 'TAKEAWAY') {
                 surveyModel = '4.0';
                 orderID = receiptNo.slice(-4);
                 numericOT = '2';
             }
-            // Rule 4: Receipt No. starts with K482A4 and DINE-IN
-            else if (receiptNo.startsWith('K482A4') && salesType === 'DINE-IN') {
+            // Rule 4: Receipt No. starts with K482 and DINE-IN
+            else if (receiptNo.startsWith('K482') && salesType === 'DINE-IN') {
                 surveyModel = '4.0';
                 orderID = receiptNo.slice(-4);
                 numericOT = '1';
             }
-            // Rule 5: Receipt No. starts with K482A4 and DELIVERY
-            else if (receiptNo.startsWith('K482A4') && salesType === 'DELIVERY') {
+            // Rule 5: Receipt No. starts with K482 and DELIVERY
+            else if (receiptNo.startsWith('K482') && salesType === 'DELIVERY') {
                 surveyModel = '3.0';
                 orderID = receiptNo;
                 numericOT = '3';
